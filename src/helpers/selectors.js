@@ -32,7 +32,9 @@ export function getInterviewersForDay(state, day) {
                   Number(iId) ===
                   Number(state.appointments[aId].interview.interviewer)
                 ) {
-                  ivw.push(state.interviewers[iId]);
+                  // ivw.push(state.interviewers[iId]);
+                } else {
+                  ivw.push(state.interviewers[iId]); //ERROR
                 }
               }
             }

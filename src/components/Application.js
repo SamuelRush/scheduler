@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getAppointmentsForDay } from "helpers/selectors";
+import { getInterviewersForDay } from "helpers/selectors";
 import { getInterview } from "helpers/selectors";
 
 import "components/Application.scss";
@@ -12,12 +13,32 @@ export default function Application(props) {
   // const [day, setDay] = useState("Monday");
   // const [days, setDays] = useState([]);
   const [state, setState] = useState({
-    day: "",
+    day: "Monday",
     days: [],
     appointments: {},
     interviewers: {}
   });
   const appointments = getAppointmentsForDay(state, state.day);
+  const interviewers = getInterviewersForDay(state, state.day);
+  console.log("1", interviewers);
+  function bookInterview(id, interview) {
+    console.log(id, interview);
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    //ERROR
+    axios.put(`http://localhost:8001/api/appointments/:id`, interview).then(
+      setState({
+        ...state,
+        appointments
+      })
+    );
+  }
   const setDay = day => setState({ ...state, day });
   // const setDays = days => setState({ ...state, days });
 
@@ -28,7 +49,9 @@ export default function Application(props) {
         key={appointment.id}
         id={appointment.id}
         time={appointment.time}
-        interview={appointment.interview}
+        interview={interview}
+        interviewers={interviewers}
+        bookInterview={bookInterview}
       />
     );
   });
@@ -39,9 +62,9 @@ export default function Application(props) {
       Promise.resolve(axios.get(`http://localhost:8001/api/interviewers`))
     ]).then(all => {
       // console.log(all[0].data, all[1].data, all[2].data);
-      const [days, appointments, interviewers] = all;
+      const [days, appointments] = all;
       setState(prev => ({
-        day: "Monday",
+        ...prev,
         days: all[0].data,
         appointments: all[1].data,
         interviewers: all[2].data
