@@ -7,12 +7,37 @@ const state = {
     {
       id: 1,
       name: "Monday",
-      appointments: [1, 2, 3]
+      appointments: [1, 2, 3, 4, 5],
+      interviewers: [2, 3, 6, 7, 10],
+      spots: 3
     },
     {
       id: 2,
       name: "Tuesday",
-      appointments: [4, 5]
+      appointments: [6, 7, 8, 9, 10],
+      interviewers: [1, 2, 3, 4, 8],
+      spots: 2
+    },
+    {
+      id: 3,
+      name: "Wednesday",
+      appointments: [11, 12, 13, 14, 15],
+      interviewers: [2, 3, 7, 9, 10],
+      spots: 2
+    },
+    {
+      id: 4,
+      name: "Thursday",
+      appointments: [16, 17, 18, 19, 20],
+      interviewers: [2, 3, 5, 6, 10],
+      spots: 4
+    },
+    {
+      id: 5,
+      name: "Friday",
+      appointments: [21, 22, 23, 24, 25],
+      interviewers: [3, 4, 6, 7, 10],
+      spots: 4
     }
   ],
   appointments: {
@@ -74,22 +99,19 @@ test("getInterviewersForDay returns an array", () => {
   const result = getInterviewersForDay(state, "Monday");
   expect(Array.isArray(result)).toBe(true);
 });
-
 test("getInterviewersForDay returns an array with a length matching the number of interviewers for that day", () => {
   const result = getInterviewersForDay(state, "Monday");
-  expect(result.length).toEqual(1);
+  expect(result.length).toEqual(2);
 });
-
 test("getInterviewersForDay returns an array containing the correct interviewer objects", () => {
-  const [first] = getInterviewersForDay(state, "Tuesday");
-  expect(first).toEqual(state.interviewers["2"]);
+  const [first, second] = getInterviewersForDay(state, "Tuesday");
+  expect(first).toEqual(state.interviewers["1"]);
+  expect(second).toEqual(state.interviewers["2"]);
 });
-
 test("getInterviewersForDay returns an empty array when the days data is empty", () => {
   const result = getInterviewersForDay({ days: [] }, "Monday");
   expect(result.length).toEqual(0);
 });
-
 test("getInterviewersForDay returns an empty array when the day is not found", () => {
   const result = getInterviewersForDay(state, "Wednesday");
   expect(result.length).toEqual(0);

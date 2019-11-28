@@ -18,26 +18,15 @@ export function getAppointmentsForDay(state, day) {
 }
 
 export function getInterviewersForDay(state, day) {
-  // function getInterviewersForDay(state, day) {
   const ivw = [];
+
   for (let dayId of state.days) {
     if (dayId.name === day) {
-      const appointments = dayId.appointments;
-      for (let apptmtID of appointments) {
-        for (const aId in state.appointments) {
-          if (Number(aId) === Number(apptmtID)) {
-            if (state.appointments[aId].interview !== null) {
-              for (const iId in state.interviewers) {
-                if (
-                  Number(iId) ===
-                  Number(state.appointments[aId].interview.interviewer)
-                ) {
-                  // ivw.push(state.interviewers[iId]);
-                } else {
-                  ivw.push(state.interviewers[iId]); //ERROR
-                }
-              }
-            }
+      const interviewers = dayId.interviewers;
+      for (let ivwID of interviewers) {
+        for (const iId in state.interviewers) {
+          if (Number(iId) === Number(ivwID)) {
+            ivw.push(state.interviewers[iId]);
           }
         }
       }
@@ -46,7 +35,6 @@ export function getInterviewersForDay(state, day) {
 
   return ivw;
 }
-// console.log(getInterviewersForDay(state, "Monday"));
 
 export function getInterview(state, appointment) {
   let interviewData = {};
@@ -68,4 +56,3 @@ export function getInterview(state, appointment) {
     return interviewData;
   }
 }
-//WHEN THIS IS WORKING WE NEED TO TRANSFER IT TO APPLICATIONS.
