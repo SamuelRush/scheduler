@@ -1,43 +1,21 @@
-import { getAppointmentsForDay } from "helpers/selectors";
-import { getInterviewersForDay } from "helpers/selectors";
-import { getInterview } from "helpers/selectors";
-
+import {
+  getAppointmentsForDay,
+  getInterview,
+  getInterviewersForDay
+} from "helpers/selectors";
 const state = {
   days: [
     {
       id: 1,
       name: "Monday",
-      appointments: [1, 2, 3, 4, 5],
-      interviewers: [2, 3, 6, 7, 10],
-      spots: 3
+      appointments: [1, 2, 3],
+      interviewers: [1, 2, 3]
     },
     {
       id: 2,
       name: "Tuesday",
-      appointments: [6, 7, 8, 9, 10],
-      interviewers: [1, 2, 3, 4, 8],
-      spots: 2
-    },
-    {
-      id: 3,
-      name: "Wednesday",
-      appointments: [11, 12, 13, 14, 15],
-      interviewers: [2, 3, 7, 9, 10],
-      spots: 2
-    },
-    {
-      id: 4,
-      name: "Thursday",
-      appointments: [16, 17, 18, 19, 20],
-      interviewers: [2, 3, 5, 6, 10],
-      spots: 4
-    },
-    {
-      id: 5,
-      name: "Friday",
-      appointments: [21, 22, 23, 24, 25],
-      interviewers: [3, 4, 6, 7, 10],
-      spots: 4
+      appointments: [4, 5],
+      interviewers: [1, 2, 3]
     }
   ],
   appointments: {
@@ -65,58 +43,40 @@ const state = {
       id: 2,
       name: "Tori Malcolm",
       avatar: "https://i.imgur.com/Nmx0Qxo.png"
+    },
+    "3": {
+      id: 3,
+      name: "Mildred Nazir",
+      avatar: "https://i.imgur.com/T2WwVfS.png"
+    },
+    "4": {
+      id: 4,
+      name: "Cohana Roy",
+      avatar: "https://i.imgur.com/FK8V841.jpg"
     }
   }
 };
-
 test("getAppointmentsForDay returns an array", () => {
   const result = getAppointmentsForDay(state, "Monday");
   expect(Array.isArray(result)).toBe(true);
 });
-
 test("getAppointmentsForDay returns an array with a length matching the number of appointments for that day", () => {
   const result = getAppointmentsForDay(state, "Monday");
   expect(result.length).toEqual(3);
 });
-
 test("getAppointmentsForDay returns an array containing the correct appointment objects", () => {
   const [first, second] = getAppointmentsForDay(state, "Tuesday");
   expect(first).toEqual(state.appointments["4"]);
   expect(second).toEqual(state.appointments["5"]);
 });
-
 test("getAppointmentsForDay returns an empty array when the days data is empty", () => {
   const result = getAppointmentsForDay({ days: [] }, "Monday");
   expect(result.length).toEqual(0);
 });
-
 test("getAppointmentsForDay returns an empty array when the day is not found", () => {
   const result = getAppointmentsForDay(state, "Wednesday");
   expect(result.length).toEqual(0);
 });
-
-test("getInterviewersForDay returns an array", () => {
-  const result = getInterviewersForDay(state, "Monday");
-  expect(Array.isArray(result)).toBe(true);
-});
-test("getInterviewersForDay returns an array with a length matching the number of interviewers for that day", () => {
-  const result = getInterviewersForDay(state, "Monday");
-  expect(result.length).toEqual(2);
-});
-test("getInterviewersForDay returns an array containing the correct interviewer objects", () => {
-  const [first, second] = getInterviewersForDay(state, "Tuesday");
-  expect(first).toEqual(state.interviewers["1"]);
-  expect(second).toEqual(state.interviewers["2"]);
-});
-test("getInterviewersForDay returns an empty array when the days data is empty", () => {
-  const result = getInterviewersForDay({ days: [] }, "Monday");
-  expect(result.length).toEqual(0);
-});
-test("getInterviewersForDay returns an empty array when the day is not found", () => {
-  const result = getInterviewersForDay(state, "Wednesday");
-  expect(result.length).toEqual(0);
-});
-
 test("getInterview returns an object with the interviewer data", () => {
   const result = getInterview(state, state.appointments["3"].interview);
   expect(result).toEqual(
@@ -130,8 +90,24 @@ test("getInterview returns an object with the interviewer data", () => {
     })
   );
 });
-
 test("getInterview returns null if no interview is booked", () => {
   const result = getInterview(state, state.appointments["2"].interview);
   expect(result).toBeNull();
+});
+test("getInterviewersForDay returns an array", () => {
+  const result = getInterviewersForDay(state, "Monday");
+  expect(Array.isArray(result)).toBe(true);
+});
+test("getInterviewersForDay returns an array with a length matching the number of appointments for that day", () => {
+  const result = getInterviewersForDay(state, "Monday");
+  expect(result.length).toEqual(3);
+});
+test("getInterviewersForDay returns an array containing the correct interviewer objects", () => {
+  const [first, second] = getInterviewersForDay(state, "Tuesday");
+  expect(first).toEqual(state.interviewers["1"]);
+  expect(second).toEqual(state.interviewers["2"]);
+});
+test("getInterviewersForDay returns an empty array when the day is not found", () => {
+  const result = getInterviewersForDay(state, "Wednesday");
+  expect(result.length).toEqual(0);
 });

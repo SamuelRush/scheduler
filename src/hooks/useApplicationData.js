@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useReducer } from "react";
-import { arrayExpression } from "@babel/types";
+import { useReducer } from "react";
 const axios = require("axios").default;
 
 export default function useApplicationData(initial) {

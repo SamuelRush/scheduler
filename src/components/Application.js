@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { getAppointmentsForDay } from "helpers/selectors";
 import { getInterviewersForDay } from "helpers/selectors";
 import { getInterview } from "helpers/selectors";
