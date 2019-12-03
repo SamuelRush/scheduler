@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, useEffect } from "react";
 const axios = require("axios").default;
 
 export default function useApplicationData(initial) {
@@ -65,21 +65,21 @@ export default function useApplicationData(initial) {
 
   const setDay = day => dispatch({ type: SET_DAY, day });
 
-  // useEffect(() => {
-  Promise.all([
-    Promise.resolve(axios.get(`http://localhost:8001/api/days`)),
-    Promise.resolve(axios.get(`http://localhost:8001/api/appointments`)),
-    Promise.resolve(axios.get(`http://localhost:8001/api/interviewers`))
-  ]).then(all => {
-    const [days, appointments, interviewers] = all;
-    dispatch({
-      type: SET_APPLICATION_DATA,
-      days: days.data,
-      appointments: appointments.data,
-      interviewers: interviewers.data
+  useEffect(() => {
+    Promise.all([
+      axios.get(`http://localhost:8001/api/days`),
+      axios.get(`http://localhost:8001/api/appointments`),
+      axios.get(`http://localhost:8001/api/interviewers`)
+    ]).then(all => {
+      const [days, appointments, interviewers] = all;
+      dispatch({
+        type: SET_APPLICATION_DATA,
+        days: days.data,
+        appointments: appointments.data,
+        interviewers: interviewers.data
+      });
     });
-  });
-  // }, []);
+  }, []);
 
   return { state, setDay, bookInterview, cancelInterview };
 }
