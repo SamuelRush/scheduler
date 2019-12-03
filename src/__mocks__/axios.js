@@ -81,5 +81,12 @@ export default {
         data: fixtures.interviewers
       });
     }
+
+    /* Resolve appointments data */
+    return Promise.resolve({
+      status: 200,
+      statusText: "OK"
+      // data: fixtures.appointments
+    });
   })
 };
