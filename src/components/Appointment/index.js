@@ -20,7 +20,8 @@ export default function Appointment(props) {
   const ERROR_DELETE = "ERROR_DELETE";
   const REMOVING = "REMOVING";
   const CONFIRM = "CONFIRM";
-  function save(name, interviewer) {
+
+  function save(name, interviewer, changeValue) {
     const interview = {
       student: name,
       interviewer
@@ -28,7 +29,7 @@ export default function Appointment(props) {
 
     transition(SAVING);
     props
-      .bookInterview(props.id, interview)
+      .bookInterview(props.id, interview, changeValue)
       .then(() => {
         transition(SHOW);
       })
@@ -99,7 +100,7 @@ export default function Appointment(props) {
         <Form
           interviewers={props.interviewers}
           onCancel={() => transition(SHOW)}
-          onSave={save}
+          onSave={(...args) => save(...args, 0)}
           interviewer={props.interview.interviewer.id}
           name={props.interview.student}
         />

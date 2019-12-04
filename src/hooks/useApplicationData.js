@@ -22,13 +22,8 @@ export default function useApplicationData(initial) {
       case SET_INTERVIEW: {
         return {
           ...state,
-          appointments: {
-            ...state.appointments,
-            [action.id]: {
-              ...state.appointments.interview,
-              interview: action.interview
-            }
-          }
+          appointments: action.appointments,
+          days: action.days
         };
       }
       default:
@@ -46,10 +41,33 @@ export default function useApplicationData(initial) {
   });
 
   function cancelInterview(id, interview) {
-    return axios.delete(`http://localhost:8001/api/appointments/${id}`);
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    return axios
+      .delete(`http://localhost:8001/api/appointments/${id}`)
+      .then(() => {
+        dispatch({
+          type: SET_INTERVIEW,
+          appointments,
+          days: updateSpot(1)
+        });
+      });
   }
 
-  function bookInterview(id, interview) {
+  function updateSpot(change) {
+    const dayIndex = state.days.findIndex(d => d.name === state.day);
+    const updatedDays = [...state.days];
+    updatedDays[dayIndex].spots += change;
+    return updatedDays;
+  }
+
+  function bookInterview(id, interview, changeValue = -1) {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
@@ -65,28 +83,29 @@ export default function useApplicationData(initial) {
       .then(() => {
         dispatch({
           type: SET_INTERVIEW,
-          appointments
+          appointments,
+          days: updateSpot(changeValue)
         });
       });
   }
 
   const setDay = day => dispatch({ type: SET_DAY, day });
 
-  // useEffect(() => {
-  Promise.all([
-    Promise.resolve(axios.get(`http://localhost:8001/api/days`)),
-    Promise.resolve(axios.get(`http://localhost:8001/api/appointments`)),
-    Promise.resolve(axios.get(`http://localhost:8001/api/interviewers`))
-  ]).then(all => {
-    const [days, appointments, interviewers] = all;
-    dispatch({
-      type: SET_APPLICATION_DATA,
-      days: days.data,
-      appointments: appointments.data,
-      interviewers: interviewers.data
+  useEffect(() => {
+    Promise.all([
+      Promise.resolve(axios.get(`http://localhost:8001/api/days`)),
+      Promise.resolve(axios.get(`http://localhost:8001/api/appointments`)),
+      Promise.resolve(axios.get(`http://localhost:8001/api/interviewers`))
+    ]).then(all => {
+      const [days, appointments, interviewers] = all;
+      dispatch({
+        type: SET_APPLICATION_DATA,
+        days: days.data,
+        appointments: appointments.data,
+        interviewers: interviewers.data
+      });
     });
-  });
-  // }, []);
+  }, []);
 
   return { state, setDay, bookInterview, cancelInterview };
 }
