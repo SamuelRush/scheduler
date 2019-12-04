@@ -36,6 +36,7 @@ export default function Appointment(props) {
         transition(ERROR_SAVE);
       });
   }
+
   function remove(name, interviewer) {
     const interview = {
       student: name,
